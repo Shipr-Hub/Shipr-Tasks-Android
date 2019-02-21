@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Tasks</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="send_button_label">Add</string>
+    <string name="add_todo_here">Add ToDo here</string>
+</resources>
