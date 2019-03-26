@@ -30,18 +30,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    public static final String ANONYMOUS = "anonymous";
+    private static final String ANONYMOUS = "anonymous";
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
-    public static final int RC_SIGN_IN = 1;
+    private static final int RC_SIGN_IN = 1;
 
-    private ListView mMessageListView;
     private MessageAdapter mMessageAdapter;
-    private ProgressBar mProgressBar;
 
-    private String mUsername;
 
-    // Firebase instance variable
-    private FirebaseDatabase mFirebaseDatabase;
+
     private DatabaseReference mMessagesDatabaseReference;
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
@@ -52,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mUsername = ANONYMOUS;
 
         // Initialize Firebase components
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        // Firebase instance variable
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         String uid = mFirebaseAuth.getUid();
 
@@ -63,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Initialize references to views
-        mProgressBar = findViewById(R.id.progressBar);
-        mMessageListView = findViewById(R.id.messageListView);
+        ProgressBar mProgressBar = findViewById(R.id.progressBar);
+        ListView mMessageListView = findViewById(R.id.messageListView);
 
         // Initialize message ListView and its adapter
 
@@ -125,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSignedInInitialize(String username) {
-        mUsername = username;
+
         attachDatabaseReadListener();
     }
 
 
     private void onSignedOutCleanup() {
-        mUsername = ANONYMOUS;
+
         mMessageAdapter.clear();
         detachDatabaseReadListener();
 
@@ -182,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
             if (resultcode == RESULT_OK) {
 
                 Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
-            } else if (requestCode == RESULT_CANCELED) {
+            } else //noinspection ConstantConditions
+                if (requestCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -208,6 +205,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void openAddToDo(View view) {
-        startActivity(new Intent(MainActivity.this, AddToDoAcitivty.class));
+        startActivity(new Intent(MainActivity.this, AddToDoActivity.class));
     }
 }

@@ -1,6 +1,6 @@
 package tech.shipr.tasksdev;
 
-public class DeveloperToDo {
+class DeveloperToDo {
 
     private String text;
 

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MessageAdapter extends ArrayAdapter<DeveloperToDo> {
+class MessageAdapter extends ArrayAdapter<DeveloperToDo> {
     public MessageAdapter(Context context, int resource, List<DeveloperToDo> objects) {
         super(context, resource, objects);
     }
@@ -27,6 +27,7 @@ public class MessageAdapter extends ArrayAdapter<DeveloperToDo> {
         DeveloperToDo message = getItem(position);
 
         messageTextView.setVisibility(View.VISIBLE);
+        assert message != null;
         messageTextView.setText(message.getText());
 
         return convertView;
