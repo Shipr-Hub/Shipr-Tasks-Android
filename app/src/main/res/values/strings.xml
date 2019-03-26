@@ -3,4 +3,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="send_button_label">Add</string>
     <string name="add_todo_here">Add ToDo here</string>
+    <string name="todo_name">ToDO Name</string>
+    <string name="enter_your_todo_name_here">Enter your ToDO Name here</string>
+    <string name="submit">Submit</string>
 </resources>
