@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 
-
 import java.util.List;
 
 public class MessageAdapter extends ArrayAdapter<DeveloperToDo> {
@@ -23,12 +22,12 @@ public class MessageAdapter extends ArrayAdapter<DeveloperToDo> {
             convertView = ((Activity) getContext()).getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
         }
 
-        TextView messageTextView =  convertView.findViewById(android.R.id.text1);
+        TextView messageTextView = convertView.findViewById(android.R.id.text1);
 
         DeveloperToDo message = getItem(position);
 
-            messageTextView.setVisibility(View.VISIBLE);
-            messageTextView.setText(message.getText());
+        messageTextView.setVisibility(View.VISIBLE);
+        messageTextView.setText(message.getText());
 
         return convertView;
     }

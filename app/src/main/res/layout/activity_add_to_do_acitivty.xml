@@ -17,21 +17,21 @@
         android:id="@+id/editNameToDo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
         android:layout_below="@id/textNameTodo"
         android:layout_marginTop="16dp"
-        android:hint="@string/enter_your_todo_name_here" />
+        android:hint="@string/enter_your_todo_name_here"
+        android:inputType="text" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_marginTop="16dp"
         android:id="@+id/submitBitton"
-        android:enabled="false"
-        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/editNameToDo"
-        android:text="@string/submit"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
+        android:text="@string/submit" />
 
 
 </RelativeLayout>

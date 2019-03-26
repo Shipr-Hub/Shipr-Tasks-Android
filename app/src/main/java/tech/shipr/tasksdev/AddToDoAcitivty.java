@@ -37,10 +37,9 @@ public class AddToDoAcitivty extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         String uid = mFirebaseAuth.getUid();
 
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("todo/"+ uid);
+        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("todo/" + uid);
 
         // Enable Send button when there's text to send
-
 
 
         mToDoEditText.addTextChangedListener(new TextWatcher() {

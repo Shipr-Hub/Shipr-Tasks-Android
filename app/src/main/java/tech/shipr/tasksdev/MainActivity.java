@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         String uid = mFirebaseAuth.getUid();
 
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("todo/"+ uid);
+        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("todo/" + uid);
 
 
         // Initialize references to views
@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-
 
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -131,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void onSignedOutCleanup(){
+    private void onSignedOutCleanup() {
         mUsername = ANONYMOUS;
         mMessageAdapter.clear();
         detachDatabaseReadListener();
@@ -139,12 +138,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-private void attachDatabaseReadListener() {
+    private void attachDatabaseReadListener() {
 
         if (mChildEventListener == null) {
 
@@ -171,32 +165,29 @@ private void attachDatabaseReadListener() {
 
             mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
         }
-}
-private void detachDatabaseReadListener(){
-        if(mChildEventListener != null) {
+    }
+
+    private void detachDatabaseReadListener() {
+        if (mChildEventListener != null) {
             mMessagesDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
-}
+    }
 
-@Override
-public void onActivityResult(int requestCode, int resultcode, Intent data){
-    super.onActivityResult(requestCode, resultcode, data);
-    if (requestCode == RC_SIGN_IN) {
+    @Override
+    public void onActivityResult(int requestCode, int resultcode, Intent data) {
+        super.onActivityResult(requestCode, resultcode, data);
+        if (requestCode == RC_SIGN_IN) {
 
-        if (resultcode == RESULT_OK) {
+            if (resultcode == RESULT_OK) {
 
-             Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
-        }
-
-        else if (requestCode == RESULT_CANCELED) {
-            Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
-          finish();
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (requestCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
-}
-
-
 
 
     @Override
