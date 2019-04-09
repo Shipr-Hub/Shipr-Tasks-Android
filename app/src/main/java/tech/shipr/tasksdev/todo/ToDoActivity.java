@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import tech.shipr.tasksdev.DevActivity;
 import tech.shipr.tasksdev.R;
 
 
@@ -208,5 +210,25 @@ public class ToDoActivity extends AppCompatActivity {
 
     public void openAddToDo(View view) {
         startActivity(new Intent(ToDoActivity.this, AddToDoActivity.class));
+    }
+
+
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    //TODO
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    startActivity(new Intent(ToDoActivity.this, DevActivity.class));
+                }
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
     }
 }

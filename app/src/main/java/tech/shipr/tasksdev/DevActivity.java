@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import tech.shipr.tasksdev.dm.DMActivity;
+
 public class DevActivity extends AppCompatActivity {
 
     @Override
@@ -14,6 +16,6 @@ public class DevActivity extends AppCompatActivity {
     }
 
     public void sDmYourself(View view){
-      //  startActivity(new Intent(DevActivity.this, ));
+        startActivity(new Intent(DevActivity.this, DMActivity.class));
     }
 }
