@@ -1,4 +1,4 @@
-package tech.shipr.tasksdev;
+package tech.shipr.tasksdev.todo;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-class MessageAdapter extends ArrayAdapter<DeveloperToDo> {
-    public MessageAdapter(Context context, int resource, List<DeveloperToDo> objects) {
+class ToDoAdapter extends ArrayAdapter<DeveloperToDo> {
+    public ToDoAdapter(Context context, int resource, List<DeveloperToDo> objects) {
         super(context, resource, objects);
     }
 

@@ -1,4 +1,4 @@
-package tech.shipr.tasksdev;
+package tech.shipr.tasksdev.todo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,8 +25,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import tech.shipr.tasksdev.R;
 
-public class MainActivity extends AppCompatActivity {
+
+public class ToDoActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
     private static final int RC_SIGN_IN = 1;
 
-    private MessageAdapter mMessageAdapter;
+    private ToDoAdapter mToDoAdapter;
 
 
 
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_todo);
 
 
         // Initialize Firebase components
@@ -65,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         // Initialize message ListView and its adapter
 
         List<DeveloperToDo> developerToDo = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(this, android.R.layout.simple_list_item_1, developerToDo);
-        mMessageListView.setAdapter(mMessageAdapter);
+        mToDoAdapter = new ToDoAdapter(this, android.R.layout.simple_list_item_1, developerToDo);
+        mMessageListView.setAdapter(mToDoAdapter);
 
 
         // Initialize progress bar
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSignedOutCleanup() {
 
-        mMessageAdapter.clear();
+        mToDoAdapter.clear();
         detachDatabaseReadListener();
 
     }
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     DeveloperToDo friendlyMessage = dataSnapshot.getValue(DeveloperToDo.class);
-                    mMessageAdapter.add(friendlyMessage);
+                    mToDoAdapter.add(friendlyMessage);
                 }
 
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -200,11 +202,11 @@ public class MainActivity extends AppCompatActivity {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
         detachDatabaseReadListener();
-        mMessageAdapter.clear();
+        mToDoAdapter.clear();
     }
 
 
     public void openAddToDo(View view) {
-        startActivity(new Intent(MainActivity.this, AddToDoActivity.class));
+        startActivity(new Intent(ToDoActivity.this, AddToDoActivity.class));
     }
 }

@@ -1,4 +1,4 @@
-package tech.shipr.tasksdev;
+package tech.shipr.tasksdev.todo;
 
 class DeveloperToDo {
 
