@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DevActivity"></activity>
+        <activity android:name=".DevActivity"/>
         <activity android:name=".todo.AddToDoActivity" />
         <activity android:name=".todo.ToDoActivity">
             <intent-filter>

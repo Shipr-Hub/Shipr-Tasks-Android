@@ -18,10 +18,7 @@ import tech.shipr.tasksdev.R;
 public class AddToDoActivity extends AppCompatActivity {
 
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 100;
-    // Firebase instance variable
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
-    private FirebaseAuth mFirebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +29,9 @@ public class AddToDoActivity extends AppCompatActivity {
         final EditText mToDoEditText = findViewById(R.id.editNameToDo);
         final Button mSendButton = findViewById(R.id.submitButton);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        // Firebase instance variable
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         String uid = mFirebaseAuth.getUid();
 
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("todo/" + uid);

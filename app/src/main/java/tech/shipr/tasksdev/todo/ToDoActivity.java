@@ -1,9 +1,7 @@
 package tech.shipr.tasksdev.todo;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -37,11 +35,11 @@ public class ToDoActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
     private ToDoAdapter mToDoAdapter;
     private static DatabaseReference mTODoDatabaseReference;
-    public static DatabaseReference mDoneToDoDatabaseReference;
+    private static DatabaseReference mDoneToDoDatabaseReference;
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,9 +68,6 @@ public class ToDoActivity extends AppCompatActivity {
         List<DeveloperToDo> developerToDo = new ArrayList<>();
         mToDoAdapter = new ToDoAdapter(this, android.R.layout.simple_list_item_checked, developerToDo);
         mToDoListView.setAdapter(mToDoAdapter);
-
-
-
 
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -235,14 +230,13 @@ public class ToDoActivity extends AppCompatActivity {
     }
 
 
-    public static void setToDoAsDone(DeveloperToDo mtodo, String mkey){
+    public static void setToDoAsDone(DeveloperToDo mtodo, String mkey) {
 
         mDoneToDoDatabaseReference.push().setValue(mtodo);
         mTODoDatabaseReference.child(mkey).setValue(null);
 
 
     }
-
 
 
 }
