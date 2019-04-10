@@ -6,4 +6,6 @@
     <string name="submit">Submit</string>
     <string name="send_button_label">Send</string>
     <string name="dm">DM</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="enter_message_here">Enter Message here</string>
 </resources>

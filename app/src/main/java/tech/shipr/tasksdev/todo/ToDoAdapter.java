@@ -46,7 +46,7 @@ class ToDoAdapter extends ArrayAdapter<DeveloperToDo> {
                 if (!textview.isChecked()) {
                     textview.setChecked(true);
                     textview.setPaintFlags(textview.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    Toast.makeText(getContext(), mToDo.getText() + " : " + textview.isChecked(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getContext(), mToDo.getText() + " : " + textview.isChecked(), Toast.LENGTH_SHORT).show();
                     String key = mToDo.getKey();
                     ToDoActivity.setToDoAsDone(mToDo, key);
                 } else {
