@@ -9,6 +9,6 @@
   <Button
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:text="DM"
+          android:text="@string/dm"
           android:onClick="sDmYourself"/>
 </LinearLayout>

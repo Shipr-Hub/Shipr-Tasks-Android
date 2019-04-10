@@ -1,7 +1,9 @@
 package tech.shipr.tasksdev.todo;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -32,23 +34,17 @@ import tech.shipr.tasksdev.R;
 
 public class ToDoActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-
-    private static final String ANONYMOUS = "anonymous";
-    public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
     private static final int RC_SIGN_IN = 1;
-
     private ToDoAdapter mToDoAdapter;
-
-
-
-    private DatabaseReference mMessagesDatabaseReference;
+    private static DatabaseReference mTODoDatabaseReference;
+    public static DatabaseReference mDoneToDoDatabaseReference;
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    ProgressBar mProgressBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
 
@@ -59,22 +55,24 @@ public class ToDoActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         String uid = mFirebaseAuth.getUid();
 
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("todo/" + uid);
+        mTODoDatabaseReference = mFirebaseDatabase.getReference().child("todo/" + uid);
+        mDoneToDoDatabaseReference = mFirebaseDatabase.getReference().child("tododone/" + uid);
+
+        mTODoDatabaseReference.keepSynced(true);
 
 
         // Initialize references to views
-        ProgressBar mProgressBar = findViewById(R.id.progressBar);
-        ListView mMessageListView = findViewById(R.id.messageListView);
+        mProgressBar = findViewById(R.id.progressBar);
+        ListView mToDoListView = findViewById(R.id.todoListView);
 
         // Initialize message ListView and its adapter
 
         List<DeveloperToDo> developerToDo = new ArrayList<>();
-        mToDoAdapter = new ToDoAdapter(this, android.R.layout.simple_list_item_1, developerToDo);
-        mMessageListView.setAdapter(mToDoAdapter);
+        mToDoAdapter = new ToDoAdapter(this, android.R.layout.simple_list_item_checked, developerToDo);
+        mToDoListView.setAdapter(mToDoAdapter);
 
 
-        // Initialize progress bar
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
 
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -83,7 +81,7 @@ public class ToDoActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    onSignedInInitialize(user.getDisplayName());
+                    onSignedInInitialize();
                 } else {
                     // User is signed out
                     onSignedOutCleanup();
@@ -124,7 +122,7 @@ public class ToDoActivity extends AppCompatActivity {
         }
     }
 
-    private void onSignedInInitialize(String username) {
+    private void onSignedInInitialize() {
 
         attachDatabaseReadListener();
     }
@@ -145,31 +143,35 @@ public class ToDoActivity extends AppCompatActivity {
 
             mChildEventListener = new ChildEventListener() {
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    DeveloperToDo friendlyMessage = dataSnapshot.getValue(DeveloperToDo.class);
-                    mToDoAdapter.add(friendlyMessage);
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+                    // Initialize progress bar
+                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
+                    DeveloperToDo developerToDo = dataSnapshot.getValue(DeveloperToDo.class);
+                    developerToDo.setKey(dataSnapshot.getKey());
+                    mToDoAdapter.add(developerToDo);
                 }
 
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
                 }
 
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 }
 
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
                 }
 
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
             };
 
-            mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+            mTODoDatabaseReference.addChildEventListener(mChildEventListener);
         }
     }
 
     private void detachDatabaseReadListener() {
         if (mChildEventListener != null) {
-            mMessagesDatabaseReference.removeEventListener(mChildEventListener);
+            mTODoDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
     }
@@ -184,9 +186,9 @@ public class ToDoActivity extends AppCompatActivity {
                 Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
             } else //noinspection ConstantConditions
                 if (requestCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+                    Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
         }
     }
 
@@ -231,4 +233,16 @@ public class ToDoActivity extends AppCompatActivity {
                 return super.dispatchKeyEvent(event);
         }
     }
+
+
+    public static void setToDoAsDone(DeveloperToDo mtodo, String mkey){
+
+        mDoneToDoDatabaseReference.push().setValue(mtodo);
+        mTODoDatabaseReference.child(mkey).setValue(null);
+
+
+    }
+
+
+
 }

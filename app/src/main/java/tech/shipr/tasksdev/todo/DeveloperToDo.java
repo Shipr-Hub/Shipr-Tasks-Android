@@ -4,6 +4,8 @@ class DeveloperToDo {
 
     private String text;
 
+    private String key;
+
     public DeveloperToDo() {
     }
 
@@ -20,5 +22,11 @@ class DeveloperToDo {
     }
 
 
+    public String getKey() {
+        return key;
+    }
 
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

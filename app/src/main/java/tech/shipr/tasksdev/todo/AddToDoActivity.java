@@ -67,7 +67,7 @@ public class AddToDoActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 DeveloperToDo friendlyMessage = new DeveloperToDo(mToDoEditText.getText().toString());
-                mMessagesDatabaseReference.push().setValue(friendlyMessage);
+                mMessagesDatabaseReference.push().setValue(friendlyMessage); // TODO: 4/10/19 Make it use the old key
 
                 // Clear input box
                 mToDoEditText.setText("");
