@@ -72,7 +72,7 @@ public class DMActivity extends AppCompatActivity {
         // Initialize references to views
         ProgressBar mProgressBar = findViewById(R.id.progressBar);
         ListView mMessageListView = findViewById(R.id.dmMessageListView);
-      //  mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
+        //  mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
         mMessageEditText = findViewById(R.id.messageEditText);
         mSendButton = findViewById(R.id.sendButton);
 
@@ -136,7 +136,7 @@ public class DMActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     onSignedInInitialize(user.getDisplayName());
-                  //  Toast.makeText(MainActivity.this, "You're now signed in. Welcome to DM Yourself.", Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(MainActivity.this, "You're now signed in. Welcome to DM Yourself.", Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     onSignedOutCleanup();
@@ -183,13 +183,13 @@ public class DMActivity extends AppCompatActivity {
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
         assert user != null;
         String uid = user.getUid();
-        Log.d(TAG, "onSignedInInitialize: "+ uid);
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("DMMessages/" + uid );
+        Log.d(TAG, "onSignedInInitialize: " + uid);
+        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("DMMessages/" + uid);
         attachDatabaseReadListener();
     }
 
 
-    private void onSignedOutCleanup(){
+    private void onSignedOutCleanup() {
         mUsername = ANONYMOUS;
         mMessageAdapter.clear();
         detachDatabaseReadListener();
@@ -197,12 +197,7 @@ public class DMActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-private void attachDatabaseReadListener() {
+    private void attachDatabaseReadListener() {
 
         if (mChildEventListener == null) {
 
@@ -229,42 +224,30 @@ private void attachDatabaseReadListener() {
 
             mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
         }
-}
-private void detachDatabaseReadListener(){
-        if(mChildEventListener != null) {
+    }
+
+    private void detachDatabaseReadListener() {
+        if (mChildEventListener != null) {
             mMessagesDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
-}
+    }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultcode, Intent data) {
+        super.onActivityResult(requestCode, resultcode, data);
+        if (requestCode == RC_SIGN_IN) {
 
+            if (resultcode == RESULT_OK) {
 
-
-
-
-
-
-
-
-@Override
-public void onActivityResult(int requestCode, int resultcode, Intent data){
-    super.onActivityResult(requestCode, resultcode, data);
-    if (requestCode == RC_SIGN_IN) {
-
-        if (resultcode == RESULT_OK) {
-
-             Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
-        }
-
-        else if (requestCode == RESULT_CANCELED) {
-            Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
-          finish();
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (requestCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
-}
-
-
 
 
     @Override

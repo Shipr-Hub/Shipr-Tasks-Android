@@ -154,7 +154,7 @@ public class ToDoActivity extends AppCompatActivity {
 
                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                    // TODO: 4/12/19 temp fix, Need to fix this 
+                    // TODO: 4/12/19 temp fix, Need to fix this
                     detachAuthListener();
                     detachDatabaseReadListener();
                     mToDoAdapter.clear();
