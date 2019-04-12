@@ -148,12 +148,23 @@ public class ToDoActivity extends AppCompatActivity {
                 }
 
                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
+
+
                 }
 
                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    // TODO: 4/12/19 temp fix, Need to fix this 
+                    detachAuthListener();
+                    detachDatabaseReadListener();
+                    mToDoAdapter.clear();
+                    mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+
+
                 }
 
                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
+
                 }
 
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -164,12 +175,20 @@ public class ToDoActivity extends AppCompatActivity {
         }
     }
 
+
     private void detachDatabaseReadListener() {
         if (mChildEventListener != null) {
             mTODoDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
     }
+
+    private void detachAuthListener() {
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultcode, Intent data) {

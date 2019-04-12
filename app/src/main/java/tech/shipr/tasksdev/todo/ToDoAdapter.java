@@ -9,12 +9,6 @@ import android.widget.ArrayAdapter;
 
 import android.widget.CheckedTextView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -49,6 +43,7 @@ class ToDoAdapter extends ArrayAdapter<DeveloperToDo> {
                    // Toast.makeText(getContext(), mToDo.getText() + " : " + textview.isChecked(), Toast.LENGTH_SHORT).show();
                     String key = mToDo.getKey();
                     ToDoActivity.setToDoAsDone(mToDo, key);
+
                 } else {
                     // TODo is already selected as complete
                 }
