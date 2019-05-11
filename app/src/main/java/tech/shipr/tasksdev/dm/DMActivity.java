@@ -1,8 +1,11 @@
 package tech.shipr.tasksdev.dm;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -26,13 +29,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.kazakago.cryptore.CipherAlgorithm;
+import com.kazakago.cryptore.Cryptore;
+import com.kazakago.cryptore.DecryptResult;
+import com.kazakago.cryptore.EncryptResult;
+
+import android.util.Base64;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import tech.shipr.tasksdev.R;
-import tech.shipr.tasksdev.dm.DMMessageAdapter;
 
 
 public class DMActivity extends AppCompatActivity {
@@ -56,6 +64,14 @@ public class DMActivity extends AppCompatActivity {
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    //Add a settings activity from where the password can be set.
+    //Password will be saved in Shared Preference.
+    String password = "12344";
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +102,11 @@ public class DMActivity extends AppCompatActivity {
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
+
+
+
+
+
         // ImagePickerButton shows an image picker to upload a image for a message
 //        mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -93,6 +114,10 @@ public class DMActivity extends AppCompatActivity {
 //                // TODO: Fire an intent to show an image picker
 //            }
 //        });
+
+
+
+
 
         // Enable Send button when there's text to send
         mMessageEditText.addTextChangedListener(new TextWatcher() {
@@ -116,18 +141,28 @@ public class DMActivity extends AppCompatActivity {
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
 
         // Send button sends a message and clears the EditText
+
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                DMMessage dMMessage = new DMMessage(mMessageEditText.getText().toString(), mUsername, null);
+                //Get the message fromt he view
+                String textMessage = mMessageEditText.getText().toString();
+                String encryptedMessage = null;
+                try {
+
+                    encryptedMessage = encrypt(textMessage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Create the Message Object and push it to the database
+                DMMessage dMMessage = new DMMessage(encryptedMessage, mUsername, null, 1);
                 mMessagesDatabaseReference.push().setValue(dMMessage);
 
                 // Clear input box
                 mMessageEditText.setText("");
             }
         });
-
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -155,6 +190,35 @@ public class DMActivity extends AppCompatActivity {
 
             }
         };
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    onSignedInInitialize(user.getDisplayName());
+                    //  Toast.makeText(MainActivity.this, "You're now signed in. Welcome to DM Yourself.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // User is signed out
+                    onSignedOutCleanup();
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setAvailableProviders(
+                                            Collections.singletonList(
+                                                    new AuthUI.IdpConfig.EmailBuilder().build()
+                                            ))
+                                    .build(),
+                            RC_SIGN_IN);
+
+
+                }
+
+            }
+        };
+
+
 
     }
 
@@ -189,6 +253,27 @@ public class DMActivity extends AppCompatActivity {
     }
 
 
+
+    Cryptore getCryptore(Context context, String alias) throws Exception {
+        Cryptore.Builder builder = new Cryptore.Builder(alias, CipherAlgorithm.RSA);
+        builder.setContext(context); //Need Only RSA on below API Lv22.
+//    builder.setBlockMode(BlockMode.ECB); //If Needed.
+//    builder.setEncryptionPadding(EncryptionPadding.RSA_PKCS1); //If Needed.
+        return builder.build();
+    }
+
+    String encrypt(String plainStr) throws Exception {
+        byte[] plainByte = plainStr.getBytes();
+        EncryptResult result = getCryptore(this, password).encrypt(plainByte);
+        return Base64.encodeToString(result.getBytes(), Base64.DEFAULT);
+    }
+
+    String decrypt(String encryptedStr) throws Exception {
+        byte[] encryptedByte = Base64.decode(encryptedStr, Base64.DEFAULT);
+        DecryptResult result = getCryptore(this, password).decrypt(encryptedByte, null);
+        return new String(result.getBytes());
+    }
+
     private void onSignedOutCleanup() {
         mUsername = ANONYMOUS;
         mMessageAdapter.clear();
@@ -203,9 +288,20 @@ public class DMActivity extends AppCompatActivity {
 
 
             mChildEventListener = new ChildEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+
                     DMMessage dMMessage = dataSnapshot.getValue(DMMessage.class);
+
+                    try {
+                        dMMessage.setText(decrypt(dMMessage.getText()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //Add the message to the Message Adapter
                     mMessageAdapter.add(dMMessage);
                 }
 

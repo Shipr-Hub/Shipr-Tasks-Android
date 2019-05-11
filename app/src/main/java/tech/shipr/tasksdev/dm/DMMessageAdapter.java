@@ -15,6 +15,7 @@ import java.util.List;
 import tech.shipr.tasksdev.R;
 
 public class DMMessageAdapter extends ArrayAdapter<DMMessage> {
+
     public DMMessageAdapter(Context context, int resource, List<DMMessage> objects) {
         super(context, resource, objects);
     }
@@ -29,14 +30,28 @@ public class DMMessageAdapter extends ArrayAdapter<DMMessage> {
         TextView messageTextView = convertView.findViewById(R.id.messageTextView);
       //  TextView authorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
 
+        // Get message from View
         DMMessage message = getItem(position);
 
+
+
         boolean isPhoto = message.getPhotoUrl() != null;
+
+        //Load message based on type
         if (isPhoto) {
+
+
+            //Get Properties
+            Context context = photoImageView.getContext();
+            String text = message.getPhotoUrl();
+
+            //Prepare view for image
             messageTextView.setVisibility(View.GONE);
             photoImageView.setVisibility(View.VISIBLE);
-            Glide.with(photoImageView.getContext())
-                    .load(message.getPhotoUrl())
+
+            //Load the image into the view
+            Glide.with(context)
+                    .load(text)
                     .into(photoImageView);
         } else {
             messageTextView.setVisibility(View.VISIBLE);
